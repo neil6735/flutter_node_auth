@@ -39,7 +39,7 @@ class SignUpSection extends StatelessWidget {
     checkToken();
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         automaticallyImplyLeading: false,
       ),
       child: SafeArea(
@@ -61,7 +61,7 @@ class SignUpSection extends StatelessWidget {
                 })),
         TextButton.icon(
             onPressed: () async {
-              signup(email, password);
+              await signup(email, password);
 
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
@@ -136,7 +136,7 @@ class LoginSection extends StatelessWidget {
                     })),
             TextButton.icon(
                 onPressed: () async {
-                  login(email, password);
+                  await login(email, password);
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   String? token = prefs.getString("token");

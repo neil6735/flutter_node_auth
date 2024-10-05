@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 5000;
 const mongoose = require("mongoose");
+var jwt = require("jsonwebtoken");
 //db
 //mongodb+srv://nemo:Ux!gQkXjYt6!wB*@cluster0.rd0kg.mongodb.net/
 
@@ -30,14 +31,20 @@ app.post("/signup", async (req, res) => {
   console.log(email);
   console.log(password);
 
-  let user = new User({
+  let user = await User.findOne({ email });
+  if (user) {
+    return res.json({ msg: "Email already taken" });
+  }
+
+  user = new User({
     email,
     password,
   });
   console.log(user);
 
   await user.save();
-  res.json({ token: "123456" });
+  var token = jwt.sign({ id: user.id }, "password");
+  res.json({ token: token });
 
   //check db for email, say email is already registered
   // return res.send("Signup API route");
@@ -51,10 +58,15 @@ app.post("/login", async (req, res) => {
 
   let user = await User.findOne({ email });
   console.log(user);
+  if (!user) {
+    return res.json({ msg: "No User" });
+  }
   if (user.password !== password) {
     return res.json({ msg: "Incorrect Pasword" });
   }
-  return res.json({ token: "123456" });
+
+  var token = jwt.sign({ id: user.id }, "password");
+  return res.json({ token: token });
 });
 
 app.listen(port, () => {
