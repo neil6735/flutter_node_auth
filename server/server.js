@@ -69,6 +69,17 @@ app.post("/login", async (req, res) => {
   return res.json({ token: token });
 });
 
+//private route
+app.post("/private", async (req, res) => {
+  let token = req.header("token");
+  if (!token) {
+    return res.json({ msg: "Not allowed, this is a Private Route" });
+  }
+  var decoded = jwt.verify(token, "password");
+  console.log(decoded.id);
+  return res.json({ msg: "You are in" });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
