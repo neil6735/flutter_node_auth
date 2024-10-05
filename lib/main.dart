@@ -213,6 +213,77 @@ class LandingScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNav(),
+    );
+  }
+}
+
+class BottomNav extends StatefulWidget {
+  BottomNav({Key? key}) : super(key: key);
+
+  @override
+  _BottomNavState createState() => _BottomNavState();
+}
+
+class _BottomNavState extends State<BottomNav> {
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        Navigator.pushNamed(context, LandingScreen.id);
+      }
+      if (index == 1) {
+        Navigator.pushNamed(context, LandingScreen.id);
+      }
+      if (index == 2) {
+        Navigator.pushNamed(context, LogoutScreen.id);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'home',
+        ),
+        BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Business'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.school),
+          label: 'Logout',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.amber[800],
+      onTap: _onItemTapped,
+    );
+  }
+}
+
+class LogoutScreen extends StatelessWidget {
+  static const String id = "LogoutScreen";
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(child: Text("Logout")),
+          TextButton.icon(
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.remove('token');
+              Navigator.pushNamed(context, LoginSection.id);
+            },
+            icon: Icon(Icons.send),
+            label: Text("Logout"),
+          )
+        ],
+      ),
+      bottomNavigationBar: BottomNav(),
     );
   }
 }
